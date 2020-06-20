@@ -6,7 +6,7 @@ import Logo from '../../Logo/Logo';
 const toolbar = (props) => {
     return (
         <header className={classes.Toolbar}>
-            <div className={classes.Logo}>
+            <div onClick={props.showSide} className={classes.Logo}>
                 <Logo/>
             </div>
             <div className={classes.Name}>

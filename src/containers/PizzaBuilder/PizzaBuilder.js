@@ -10,7 +10,7 @@ import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import pizza from '../../assets/pizza.png';
 // import Modal from '../../components/UI/Modal/Modal';
-// This is me
+
 const PRICE_LIST = {
     pepperoni: 40,
     onions: 50,

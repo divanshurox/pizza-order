@@ -33,4 +33,13 @@
     .DesktopOnly {
         display: none;
     }
+    .Toolbar{
+        width: 100%;
+    }
+}
+
+@media (max-width: 1200px){
+    .Toolbar p{
+        display: none;
+    }
 }
