@@ -19,7 +19,6 @@ const pizzaIngredients = (props) => {
             break;
         case('pepperoni'):
             ingredient = toppingHandler('pepperoni',12);
-            console.log(ingredient);
             break;
         case('olives'):
             ingredient= toppingHandler('olives',19);

@@ -1,0 +1,9 @@
+.error{
+    width: 500px;
+    height: 500px;
+    border: 1px solid black;
+    box-shadow: 0 2px 3px #ccc;
+    background-color: white;
+    color: black;
+    z-index: 1000;
+}

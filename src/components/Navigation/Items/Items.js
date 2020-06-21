@@ -8,7 +8,7 @@ const items = (props) => {
             <Item link="/" active>
                 Pizza Builder
             </Item>
-            <Item link="/">
+            <Item link="/orders">
                 My Orders
             </Item>
             <Item link="/">

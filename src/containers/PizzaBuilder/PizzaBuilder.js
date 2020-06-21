@@ -9,7 +9,9 @@ import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import pizza from '../../assets/pizza.png';
-// import Modal from '../../components/UI/Modal/Modal';
+import { Button } from '@material-ui/core';
+import axios from '../../axios-orders';
+import Spinner from '../../components/UI/Spinner/Spinner';
 
 const PRICE_LIST = {
     pepperoni: 40,
@@ -24,19 +26,18 @@ const PRICE_LIST = {
 
 export default class PizzaBuilder extends Component{
     state={
-        ingredients: {
-            pepperoni: false,
-            onions: false,
-            sausage: false,
-            peppers: false,
-            chicken: false,
-            jalapenos: false,
-            olives: false,
-            mushrooms: false
-        },
+        ingredients: null,
         totalPrice: 550,
         showBackdrop: false,
-        showModal: false
+        showModal: false,
+        loadSpinner: false
+    }
+
+    componentDidMount(){
+        axios.get('https://pizza-maker-ffea8.firebaseio.com/ingredients.json')
+            .then((res) => {
+                this.setState({ingredients: res.data})
+            });
     }
 
     addHandler = (type) => {
@@ -62,6 +63,33 @@ export default class PizzaBuilder extends Component{
         this.setState({showModal: false});
     }
 
+    handleOrder = () => {
+        this.setState({loadSpinner: true});
+        const ingredient=[];
+        for (let ele in this.state.ingredients){
+            this.state.ingredients[ele]&&ingredient.push(ele);
+        }
+        const order= {
+            name: 'Divanshu Agarwal',
+            address: {
+                city: 'Rudrapur',
+                state: 'Uttrakhand',
+                pinCode: '263153'
+            },
+            phnNo: '8979900301',
+            ingredients: ingredient,
+            price: this.state.price
+        };
+        axios.post('/order.json',order)
+            .then((res) => {
+                console.log(res);
+                this.setState({loadSpinner: false, showModal: false})
+            })
+            .catch(err => {
+                console.log(err);                
+            });
+    }
+
     render(){
         const addDisabledInfo= {...this.state.ingredients};
         for (let ele in addDisabledInfo){
@@ -74,7 +102,7 @@ export default class PizzaBuilder extends Component{
         let ingredients= [];
         for (let ele in this.state.ingredients){
             if(this.state.ingredients[ele]){
-            ingredients.push(<p style={{fontWeight: 'bold', textTransform: 'capitalize',border: '1px solid black', borderRadius: '5px', width: '100%'}} id="transition-modal-description">{ele}</p>)
+            ingredients.push(<li style={{fontWeight: 'bold', textTransform: 'capitalize',border: '1px solid black', borderRadius: '5px', width: '100%'}} id="transition-modal-description">{ele}</li>)
             }
         }
         return (
@@ -98,10 +126,15 @@ export default class PizzaBuilder extends Component{
                         <div className={classes.modalBox}>
                             <img className={classes.img1} src={pizza} alt=" "/>
                             <div className={classes.ing}>
-                                {ingredients}
+                                <ol>
+                                    {ingredients}
+                                </ol>
                             </div>
                             <img className={classes.img2} src={pizza} alt=" "/>
                         </div>
+                        {this.state.loadSpinner&&<Spinner />}
+                        <Button onClick={this.handleOrder} variant='outline' style={{color: 'green',border: '1px solid green', marginRight: '10px'}}>Continue</Button>
+                        <Button onClick={() => {this.setState({showModal: false})}} variant="outlined" color="secondary">Cancel</Button>
                     </div>
                     </Fade>
                 </Modal>
