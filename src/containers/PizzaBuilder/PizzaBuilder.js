@@ -3,7 +3,6 @@ import Aux from '../../hoc/Auxilliary/Auxilliary';
 import Pizza from '../../components/Pizza/Pizza';
 import classes from './PizzaBuilder.module.css';
 import BuildControls from '../../components/Pizza/BuildControls/BuildControls';
-import LowPart from '../../components/UI/LowPart/LowPart';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
@@ -12,6 +11,8 @@ import pizza from '../../assets/pizza.png';
 import { Button } from '@material-ui/core';
 import axios from '../../axios-orders';
 import Spinner from '../../components/UI/Spinner/Spinner';
+import Checkout from '../Checkout/Checkout';
+import {Route} from 'react-router-dom';
 
 const PRICE_LIST = {
     pepperoni: 40,
@@ -30,11 +31,12 @@ export default class PizzaBuilder extends Component{
         totalPrice: 550,
         showBackdrop: false,
         showModal: false,
-        loadSpinner: false
+        loadSpinner: false,
+        showFinalPage: false
     }
 
     componentDidMount(){
-        axios.get('https://pizza-maker-ffea8.firebaseio.com/ingredients.json')
+        axios.get('/ingredients.json')
             .then((res) => {
                 this.setState({ingredients: res.data})
             });
@@ -64,30 +66,16 @@ export default class PizzaBuilder extends Component{
     }
 
     handleOrder = () => {
-        this.setState({loadSpinner: true});
-        const ingredient=[];
+        const queryComp = [];
         for (let ele in this.state.ingredients){
-            this.state.ingredients[ele]&&ingredient.push(ele);
+            queryComp.push(encodeURIComponent(ele) + '=' + encodeURIComponent(this.state.ingredients[ele]?1:0));
         }
-        const order= {
-            name: 'Divanshu Agarwal',
-            address: {
-                city: 'Rudrapur',
-                state: 'Uttrakhand',
-                pinCode: '263153'
-            },
-            phnNo: '8979900301',
-            ingredients: ingredient,
-            price: this.state.price
-        };
-        axios.post('/order.json',order)
-            .then((res) => {
-                console.log(res);
-                this.setState({loadSpinner: false, showModal: false})
-            })
-            .catch(err => {
-                console.log(err);                
-            });
+        queryComp.push('price='+this.state.totalPrice);
+        const queryString= queryComp.join('&');
+        this.props.history.push({
+            pathname: "/confirmOrder",
+            search: '?'+queryString
+        });
     }
 
     render(){
@@ -149,7 +137,6 @@ export default class PizzaBuilder extends Component{
                     price= {this.state.totalPrice}
                     showModal={this.modalOpenHandler}
                 />
-                <LowPart />
             </div>
         );
     }

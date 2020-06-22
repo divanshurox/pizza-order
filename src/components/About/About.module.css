@@ -1,0 +1,18 @@
+.About{
+    position: relative;
+    width: 500px;
+    height: 500px;
+    display: block;
+    margin: auto;
+    margin-top: 10%;
+    background: none;
+}
+
+.About img{
+    height: 300px;
+    width: 250px;
+    border-radius: 25%;
+    border: 2px solid black;
+    position: relative;
+    left: 0;
+}

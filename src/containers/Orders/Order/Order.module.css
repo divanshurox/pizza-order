@@ -1,0 +1,32 @@
+.Order{
+    width: 80%;
+    border-radius: 5px;
+    border: 1px solid black;
+    margin: 10px auto;
+    box-sizing: border-box;
+    box-shadow: 0 5px 5px #ccc;
+    padding: 20px;
+}
+
+.Pizza{
+    height: 100px;
+    width: 100px;
+    position: relative;
+    left: 800px;
+    bottom: 50px;
+}
+
+@media (max-width: 730px){
+    .Order{
+        width: 60%;
+    }
+}
+
+@media (max-width: 1200px){
+    .Pizza{
+        left: 80%;
+        top: 20%;
+    }
+}
+
+

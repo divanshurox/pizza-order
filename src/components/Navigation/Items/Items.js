@@ -11,7 +11,7 @@ const items = (props) => {
             <Item link="/orders">
                 My Orders
             </Item>
-            <Item link="/">
+            <Item link="/about">
                 About
             </Item>
         </ul>

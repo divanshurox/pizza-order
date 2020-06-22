@@ -13,6 +13,7 @@ import BuildIcon from '@material-ui/icons/Build';
 import LocalPizzaIcon from '@material-ui/icons/LocalPizza';
 import BorderColorIcon from '@material-ui/icons/BorderColor';
 import MailIcon from '@material-ui/icons/Mail';
+import LowPart from '../UI/LowPart/LowPart';
 
 class Layout extends Component{
     state={
@@ -65,7 +66,8 @@ class Layout extends Component{
                 <ToolBar showSide={this.handleSide} />
                     <main className={classes.content}>
                         {this.props.children}
-                </main>
+                    </main>
+                <LowPart />
             </Aux>
         );
     };

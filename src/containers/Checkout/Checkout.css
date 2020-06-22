@@ -1,0 +1,17 @@
+.box {
+    position: relative;
+    width: 500px;
+    height: 500px;
+    display: block;
+    margin: auto;
+    margin-top: 10%;
+    background: none;
+  }
+.all{
+    text-align: center;
+    margin-bottom: 10%;
+}
+.all h1{
+    position: relative;
+    top: 70px;
+}
