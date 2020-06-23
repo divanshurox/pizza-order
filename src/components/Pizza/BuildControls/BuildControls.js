@@ -6,7 +6,7 @@ import Fab from '@material-ui/core/Fab';
 import NavigationIcon from '@material-ui/icons/Navigation';
 
 const controls = [
-    {label: 'Sausage', type: 'sausage'},
+    {label: 'Sausage', type: 'sausage',},
     {label: 'Chicken', type: 'chicken'},
     {label: 'Pepperoni', type: 'pepperoni'},
     {label: 'Onions', type: 'onions'},
@@ -19,7 +19,8 @@ const controls = [
 const buildControls = (props) => {
     let control= controls.map((ele) => {
         return <BuildControl 
-                    label={ele.label} 
+                    label={ele.label}
+                    price={props.priceList[ele.type]} 
                     addClicked={() => props.addHandler(ele.type)} 
                     remClicked={() => props.remHandler(ele.type)}
                     disabledRem={props.disabledRem[ele.type]}

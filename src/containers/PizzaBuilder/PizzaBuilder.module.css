@@ -39,12 +39,14 @@
     flex-direction: row;
     flex-wrap: nowrap;
     align-items: center;
+    font: inherit;
     justify-content: center;
   }
 
   .modalBox img{
     height: 80px;
     width: 80px;
+    font: inherit;
   }
 
   .img1{

@@ -136,6 +136,7 @@ export default class PizzaBuilder extends Component{
                     disabledAdd={addDisabledInfo}
                     price= {this.state.totalPrice}
                     showModal={this.modalOpenHandler}
+                    priceList= {PRICE_LIST}
                 />
             </div>
         );

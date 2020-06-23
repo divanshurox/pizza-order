@@ -7,6 +7,11 @@
     font-size: 1.2rem;
 }
 
+.Pizza p{
+    font-size: 3rem;
+    font-family: 'Cantora One';
+}
+
 @media (min-width: 500px) and (min-height: 400px) {
     .Pizza {
         width: 350px;

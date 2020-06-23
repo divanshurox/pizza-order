@@ -1,0 +1,45 @@
+.About{
+    margin-top: 200px;
+    margin-bottom: 200px;
+}
+
+.left{
+    position: relative;
+    left: 10px;
+    bottom: 10px;
+}
+
+.about-right h2{
+    font-size: 5rem;
+    font-family: 'Cantora One';
+}
+
+.about-right p{
+    font-size: 3rem;
+    font-family: 'Dancing Script';
+}
+
+.about-link{
+    padding-left: 0;
+}
+
+.links{
+    margin: 20px 0;
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+.image{
+    height: 300px;
+    width: 230px;
+    border-radius: 25%;
+    border: 2px solid black;
+    position: relative;
+    left: 0;
+}
+
+.About a{
+    margin: auto 5px;
+}

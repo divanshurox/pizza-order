@@ -42,9 +42,14 @@
 }
 
 .Label {
+    position: relative;
+    left: -30px;
     padding: 10px;
     font-weight: bold;
     width: 80px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
 }
 
 .BuildControl .Less {  
