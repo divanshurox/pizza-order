@@ -8,6 +8,15 @@
     height: 100%;
 }
 
+.Items button{
+    background-color: rgb(216, 88, 88);
+    border-radius: 5px;
+    border: 1px solid black;
+    box-sizing: border-box;
+    color: white;
+    margin: auto 5px;
+}
+
 @media (min-width: 500px) {
     .Items {
         flex-flow: row;

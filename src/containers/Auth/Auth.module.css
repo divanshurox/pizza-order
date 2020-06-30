@@ -1,0 +1,44 @@
+.Auth{
+    width: 80%;
+    margin: 20px auto;
+    text-align: center;
+    border: 1px solid black;
+    box-shadow: 0 2px 3px grey;
+    box-sizing: border-box;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-wrap: nowrap;
+    margin-top: 120px;
+    margin-bottom: 120px;
+}
+
+.Auth input{
+    margin: 10px 10px;
+}
+
+.Auth p{
+    margin: 10px auto;
+}
+
+.Auth button{
+    display: inline-block;
+    margin: auto 10px;
+    width: 40%;
+}
+
+@media (min-width: 600px){
+    .Auth{
+        width: 500px;
+    }
+}
+
+
+
+.all{
+    width: 80%;
+    border: 1px solid black;
+    box-shadow: 0 2px 3px #ccc;
+    box-sizing: border-box;
+}

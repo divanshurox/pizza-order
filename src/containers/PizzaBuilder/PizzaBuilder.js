@@ -9,26 +9,14 @@ import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import pizza from '../../assets/pizza.png';
 import { Button } from '@material-ui/core';
-import axios from '../../axios-orders';
 import Spinner from '../../components/UI/Spinner/Spinner';
-import Checkout from '../Checkout/Checkout';
-import {Route} from 'react-router-dom';
+import {connect} from 'react-redux';
+import {addIngredients,remIngredients,initIngredients,changeAuthPath} from '../../store/actions/index';
+import { withRouter } from 'react-router-dom';
 
-const PRICE_LIST = {
-    pepperoni: 40,
-    onions: 50,
-    sausage: 60,
-    peppers: 30,
-    chicken: 70,
-    jalapenos: 40,
-    olives: 40,
-    mushrooms: 60
-}
 
-export default class PizzaBuilder extends Component{
+class PizzaBuilder extends Component{
     state={
-        ingredients: null,
-        totalPrice: 550,
         showBackdrop: false,
         showModal: false,
         loadSpinner: false,
@@ -36,62 +24,58 @@ export default class PizzaBuilder extends Component{
     }
 
     componentDidMount(){
-        axios.get('/ingredients.json')
-            .then((res) => {
-                this.setState({ingredients: res.data})
-            });
-    }
-
-    addHandler = (type) => {
-        const oldIng= {...this.state.ingredients};
-        oldIng[type]=true;
-        this.setState({ingredients: oldIng});
-        const newPrice= this.state.totalPrice+PRICE_LIST[type];
-        this.setState({totalPrice: newPrice});
-    }
-
-    remHandler = (type) => {
-        const oldIng= {...this.state.ingredients};
-        oldIng[type]=false;
-        this.setState({ingredients: oldIng});
-        const newPrice= this.state.totalPrice-PRICE_LIST[type];
-        this.setState({totalPrice: newPrice});
+        this.props.initIngredients();
     }
 
     modalOpenHandler = () => {
-        this.setState({showModal: true});
+        if(!this.props.isAuth){            
+            this.props.changePath('/confirmOrder');
+            this.props.history.replace('/signIn');
+        }else{
+            this.setState({showModal: true});
+        }
     }
     modalCloseHandler = () => {
         this.setState({showModal: false});
     }
 
     handleOrder = () => {
-        const queryComp = [];
-        for (let ele in this.state.ingredients){
-            queryComp.push(encodeURIComponent(ele) + '=' + encodeURIComponent(this.state.ingredients[ele]?1:0));
-        }
-        queryComp.push('price='+this.state.totalPrice);
-        const queryString= queryComp.join('&');
-        this.props.history.push({
-            pathname: "/confirmOrder",
-            search: '?'+queryString
-        });
+        this.props.history.push('/confirmOrder');
     }
 
     render(){
-        const addDisabledInfo= {...this.state.ingredients};
+        const addDisabledInfo= {...this.props.ing};
         for (let ele in addDisabledInfo){
             addDisabledInfo[ele] = addDisabledInfo[ele]===true;
         }
-        const remDisabledInfo= {...this.state.ingredients};
+        const remDisabledInfo= {...this.props.ing};
         for (let ele in addDisabledInfo){
            remDisabledInfo[ele] = remDisabledInfo[ele]===false;
         }
         let ingredients= [];
-        for (let ele in this.state.ingredients){
-            if(this.state.ingredients[ele]){
+        for (let ele in this.props.ing){
+            if(this.props.ing[ele]){
             ingredients.push(<li style={{fontWeight: 'bold', textTransform: 'capitalize',border: '1px solid black', borderRadius: '5px', width: '100%'}} id="transition-modal-description">{ele}</li>)
             }
+        }
+        let burger = this.props.loading && <Spinner />;
+        if(this.props.ing){
+            burger = (
+                <Aux>
+                    <div className={classes.box}>
+                        <Pizza ingredients={this.props.ing}/>
+                    </div>
+                    <BuildControls 
+                        addHandler={this.props.addIngredient} 
+                        remHandler={this.props.remIngredient} 
+                        disabledRem={remDisabledInfo} 
+                        disabledAdd={addDisabledInfo}
+                        price= {this.props.cost}
+                        showModal={this.modalOpenHandler}
+                        isAuth={this.props.isAuth}
+                    />
+                </Aux>
+            );
         }
         return (
             <div className={classes.all}>
@@ -120,25 +104,35 @@ export default class PizzaBuilder extends Component{
                             </div>
                             <img className={classes.img2} src={pizza} alt=" "/>
                         </div>
-                        {this.state.loadSpinner&&<Spinner />}
+                        {this.props.loading&&<Spinner />}
                         <Button onClick={this.handleOrder} variant='outline' style={{color: 'green',border: '1px solid green', marginRight: '10px'}}>Continue</Button>
                         <Button onClick={() => {this.setState({showModal: false})}} variant="outlined" color="secondary">Cancel</Button>
                     </div>
                     </Fade>
                 </Modal>
-                <div className={classes.box}>
-                    <Pizza ingredients={this.state.ingredients}/>
-                </div>
-                <BuildControls 
-                    addHandler={this.addHandler} 
-                    remHandler={this.remHandler} 
-                    disabledRem={remDisabledInfo} 
-                    disabledAdd={addDisabledInfo}
-                    price= {this.state.totalPrice}
-                    showModal={this.modalOpenHandler}
-                    priceList= {PRICE_LIST}
-                />
+                {burger}
             </div>
         );
     }
 }
+
+const mapStateToProps = state => {
+    return {
+        ing: state.pizza.ingredients,
+        cost: state.pizza.totalPrice,
+        loading: state.pizza.loading,
+        isAuth: state.auth.isAuthenticated
+    };
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        addIngredient: (type) => dispatch(addIngredients(type)),
+        remIngredient: (type) => dispatch(remIngredients(type)),
+        initIngredients: () => dispatch(initIngredients()),
+        changePath: (path) => dispatch(changeAuthPath(path))
+    };
+}
+
+
+export default connect(mapStateToProps,mapDispatchToProps)(withRouter(PizzaBuilder));

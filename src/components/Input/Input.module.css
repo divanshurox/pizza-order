@@ -7,9 +7,12 @@
     align-items: center;
 }
 
+
 .Label{
     font-weight: bold;
-    display: block;
+    position: relative;
+    left: -150px;
+    top: 12px;
     margin-bottom: 8px;
 }
 
@@ -27,4 +30,9 @@
     outline: none;
     border: 1px solid lightskyblue;
     background-color: #ccc;
+}
+
+
+.Invalid{
+    border: 1px solid red;
 }

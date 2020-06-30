@@ -1,0 +1,32 @@
+.container{
+    width: 100%;
+    margin-top: 35px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+.hero{
+    height: 100%;
+    width: 100%;
+    background-image: url('../../../assets/cover.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+.copy{
+    text-align: center;
+    color: white;
+    position: fixed;
+    top: 200px;
+    left: 280px;
+}
+
+.copy h1{
+    font-size: 8rem;
+}
+.copy p{
+    font-size: 3rem;
+}

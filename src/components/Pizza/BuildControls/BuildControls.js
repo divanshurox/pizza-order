@@ -16,11 +16,22 @@ const controls = [
     {label: 'Jalapenos', type: 'jalapenos'},
 ];
 
+const PRICE_LIST = {
+    pepperoni: 40,
+    onions: 50,
+    sausage: 60,
+    peppers: 30,
+    chicken: 70,
+    jalapenos: 40,
+    olives: 40,
+    mushrooms: 60
+}
+
 const buildControls = (props) => {
     let control= controls.map((ele) => {
         return <BuildControl 
                     label={ele.label}
-                    price={props.priceList[ele.type]} 
+                    price={PRICE_LIST[ele.type]} 
                     addClicked={() => props.addHandler(ele.type)} 
                     remClicked={() => props.remHandler(ele.type)}
                     disabledRem={props.disabledRem[ele.type]}
@@ -34,7 +45,7 @@ const buildControls = (props) => {
             <br />
             <br />
             <Fab variant="extended" onClick={props.showModal} disabled={props.price<=550}>
-                    Order Now
+                    {props.isAuth?'Order Now':'Log IN!'}
             </Fab>
         </div>
     );

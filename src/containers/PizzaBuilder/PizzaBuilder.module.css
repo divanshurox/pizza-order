@@ -59,3 +59,12 @@
     top: 100px;
     right: 400px;
   }
+
+  @media (min-width: 700px){
+    .img1{
+      left: 550px;
+    }
+    .img2{
+      right: 550px;
+    }
+  }

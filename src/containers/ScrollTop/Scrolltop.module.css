@@ -1,0 +1,11 @@
+.Top{
+    position: fixed;
+    right: 100px;
+    top: 400px;
+}
+
+@media (min-width: 700px){
+    .Top{
+        right: 50px;
+    }
+}

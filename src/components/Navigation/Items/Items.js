@@ -1,16 +1,27 @@
 import React from 'react';
 import Item from './Item/Item';
 import classes from './Items.module.css';
+import {withRouter} from 'react-router-dom';
+import {connect} from 'react-redux';
 
 const items = (props) => {
+    const divert = (path) => {
+        props.history.push(path);
+    }
     return (
         <ul className={classes.Items}>
-            <Item link="/" active>
+            <li>{!props.isAuth&&<button onClick={() => divert('/auth')}>New Customer?</button>}</li>
+            <Item link="/">
                 Pizza Builder
             </Item>
-            <Item link="/orders">
+            {props.isAuth&&<Item link="/orders">
                 My Orders
-            </Item>
+            </Item>}
+            {
+                !props.isAuth?<Item link="/signIn">
+                Sign In
+            </Item>:<Item link='/logout'>Logout</Item>
+            }
             <Item link="/about">
                 About
             </Item>
@@ -18,4 +29,10 @@ const items = (props) => {
     );
 };
 
-export default items;
+const mapStateToProps = state => {
+    return {
+        isAuth: state.auth.isAuthenticated
+    }
+}
+
+export default connect(mapStateToProps)(withRouter(items));

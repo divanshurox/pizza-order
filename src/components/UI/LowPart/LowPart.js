@@ -40,7 +40,7 @@ const lowPart = (props) => {
                     </ul>
                 </div>
             </div>
-            <img src={playStore} alt='google' />
+            <img src={playStore} alt='google' className={classes.play}/>
             <div className={classes.end}>
                 <p>Order a delicious pizza on the go, anywhere, anytime. Pizza Hut is happy to assist you with your home delivery. Every time you order, you get a hot and fresh pizza delivered at your doorstep in less than thirty minutes. *T&C Apply.
                 </p>

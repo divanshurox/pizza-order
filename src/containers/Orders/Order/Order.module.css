@@ -20,6 +20,10 @@
     .Order{
         width: 60%;
     }
+    .Pizza{
+        height: 70px;
+        width: 70px;
+    }
 }
 
 @media (max-width: 1200px){

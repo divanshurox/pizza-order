@@ -20,12 +20,6 @@
 }
 
 
-.all img{
-    position: relative;
-    left: 500px;
-    height: 100px;
-    width: 250px;
-}
 
 .sub{
     display: flex;
@@ -39,4 +33,20 @@
 
 .sub li{    
     list-style: none;
+}
+
+.play{
+    position: relative;
+    left: 500px;
+    height: 100px;
+    width: 250px;
+}
+
+@media (min-width: 700px){
+    .play{
+        height: 50px;
+        width: 120px;
+        position: relative;
+        left: 10px;
+    }
 }

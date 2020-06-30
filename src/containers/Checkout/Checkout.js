@@ -2,27 +2,16 @@ import React, {Component} from 'react';
 import './Checkout.css';
 import Pizza from '../../components/Pizza/Pizza';
 import {Button} from '@material-ui/core';
-import {Route} from 'react-router-dom';
+import {Route,Redirect} from 'react-router-dom';
 import ContactData from '../../containers/Checkout/ContactData/ContactData';
+import {connect} from 'react-redux';
+import {purchasedHandler} from '../../store/actions/index';
+import ScrollTop from '../ScrollTop/Scrolltop';
 
-export default class Checkout extends Component{
-    state={
-        ingredients: null,
-        totalPrice: 0
-    }
+class Checkout extends Component{
     componentWillMount(){
-        const query = new URLSearchParams(this.props.location.search);
-        const ing = {};
-        let price = 0;
-        for (let param of query.entries()){
-            if(param[0]==='price'){
-                price = +param[1];
-            }else{
-                ing[param[0]] = +param[1];
-            }
-        }
-        this.setState({ingredients: ing, totalPrice: price});
-        
+        window.scrollTo(0, 0);
+        this.props.purchasedSet();
     }
     handleCancel = () => {
         this.props.history.goBack();
@@ -33,17 +22,35 @@ export default class Checkout extends Component{
         this.props.history.replace('/confirmOrder/contact-data');
     }
     render(){
+        let redirect = this.props.purchased && <Redirect to="/" />;
         return (
             <div className='all'>
+                {redirect}
                 <h1>Hope It Tastes Awesome!</h1>
                 <div className='box'>
-                    <Pizza ingredients={this.state.ingredients} />
+                    <Pizza ingredients={this.props.ing} />
                 </div>
-                <p>Price: ₹{this.state.totalPrice}</p>
+                <p>Price: ₹{this.props.cost}</p>
                 <Button variant="outlined" color='primary' style={{marginRight: '10px'}} onClick={this.handleCont}>Continue</Button>
                 <Button variant="outlined" color='secondary' onClick={this.handleCancel}>Cancel</Button>
-                <Route path={this.props.match.url + '/contact-data'} render={(props) => (<ContactData ingredients={this.state.ingredients} price={this.state.totalPrice} {...props} />)} />
+                <Route path={this.props.match.url + '/contact-data'} component={ContactData} />
             </div>
         );
     }
 }
+
+const mapStateToProps = state => {
+    return {
+        ing: state.pizza.ingredients,
+        cost: state.pizza.totalPrice,
+        purchased: state.order.purchased
+    }
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        purchasedSet: () => dispatch(purchasedHandler())
+    }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(Checkout);

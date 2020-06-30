@@ -4,6 +4,8 @@ import axios from '../../../axios-orders';
 import Spinner from '../../../components/UI/Spinner/Spinner';
 import classes from './ContactData.module.css';
 import Input from '../../../components/Input/Input';
+import {connect} from 'react-redux';
+import {orderTrigger} from '../../../store/actions/index';
 
 class ContactData extends Component{
     state={
@@ -14,7 +16,12 @@ class ContactData extends Component{
                     type: 'text',
                     placeholder: 'Enter your Name'
                 },
-                value: ''
+                value: '',
+                validation: {
+                    required: true
+                },
+                valid: false,
+                touched: false
             },
             city: {
                 elementType: 'input',
@@ -22,7 +29,12 @@ class ContactData extends Component{
                     type: 'text',
                     placeholder: 'Enter your City'
                 },
-                value: ''
+                value: '',
+                validation: {
+                    required: true
+                },
+                valid: false,
+                touched: false
             },
             state: {
                 elementType: 'input',
@@ -30,7 +42,12 @@ class ContactData extends Component{
                     type: 'text',
                     placeholder: 'Enter your State'
                 },
-                value: ''
+                value: '',
+                validation: {
+                    required: true
+                },
+                valid: false,
+                touched: false
             },
             pinCode: {
                 elementType: 'input',
@@ -38,7 +55,13 @@ class ContactData extends Component{
                     type: 'text',
                     placeholder: 'Enter your pin code'
                 },
-                value: ''
+                value: '',
+                validation: {
+                    required: true,
+                    maxLen: 6
+                },
+                valid: false,
+                touched: false
             },
             phnNo: {
                 elementType: 'input',
@@ -46,7 +69,14 @@ class ContactData extends Component{
                     type: 'text',
                     placeholder: 'Enter your Number'
                 },
-                value: ''
+                value: '',
+                validation: {
+                    required: true,
+                    minLen: 10,
+                    maxLen: 10
+                },
+                valid: false,
+                touched: false
             },
             email: {
                 elementType: 'input',
@@ -54,24 +84,32 @@ class ContactData extends Component{
                     type: 'email',
                     placeholder: 'Enter your Email'
                 },
-                value: ''
+                value: '',
+                validation: {
+                    required: true
+                },
+                valid: false,
+                touched: false
             },
-            deliveyMethod: {
+            deliveryMethod: {
                 elementType: 'select',
                 elementConfig: {
                     options: [{value: 'fastest', display: 'Fastest'},{value: 'cheapest', display: 'Cheapest'}]
                 },
-                value: ''
+                validation: {
+                    required: true
+                },
+                valid: true,
+                value: 'fastest'
             }
         },
-        loadSpinner: false
+        loadOrderBtn: false
     }
     handleClick = (e) => {
-        this.setState({loadSpinner: true});
         console.log(this.state.orderForm);
         const ingredient=[];
-        for (let ele in this.props.ingredients){
-            if(this.props.ingredients[ele]===1){
+        for (let ele in this.props.ing){
+            if(this.props.ing[ele]){
                 ingredient.push(ele);
             }
         }
@@ -82,23 +120,38 @@ class ContactData extends Component{
         const order= {
             customer: formData,
             ingredients: ingredient,
-            price: this.props.price
+            price: this.props.cost,
+            userId: this.props.userId
         };
-        axios.post('/order.json',order)
-            .then((res) => {
-                this.setState({loadSpinner: false});
-                this.props.history.replace('/');
-            })
-            .catch(err => {
-                console.log(err);                
-            });
+        this.props.handleOrder(order,this.props.token);
         e.preventDefault();
+    }
+
+    checkValidity = (value,rules) => {
+        let isValid= true;
+        if(rules.required){
+            isValid= value.trim() !== '' && isValid;
+        }
+        if(rules.maxLen>0){
+            isValid = value.length >= rules.maxLen && isValid;
+        }
+        if(rules.minLen){
+            isValid = value.length <= rules.minLen && isValid;
+        }
+        return isValid;
     }
 
     changeHandler = (e,indentifier) => {
         const updatedOrderForm = {...this.state.orderForm};
         updatedOrderForm[indentifier].value=e.target.value;
-        this.setState({orderForm: updatedOrderForm});
+        updatedOrderForm[indentifier].valid=this.checkValidity(updatedOrderForm[indentifier].value,updatedOrderForm[indentifier].validation);
+        updatedOrderForm[indentifier].touched = true;
+        let formIsValid=true;
+        for (let ele in updatedOrderForm){
+            formIsValid = updatedOrderForm[ele].valid && formIsValid;
+        }
+        console.log(formIsValid);
+        this.setState({orderForm: updatedOrderForm, loadOrderBtn: formIsValid});
     }
 
     render(){
@@ -117,14 +170,17 @@ class ContactData extends Component{
                                     changed={(event) => {this.changeHandler(event,ele.id)}}
                                     elementType={ele.config.elementType} 
                                     elementConfig={ele.config.elementConfig}
-                                    value={ele.config.value} 
+                                    value={ele.config.value}
+                                    shouldValidate={ele.config.validation}
+                                    touched={ele.config.touched}
+                                    invalid={ele.config.valid} 
                                 />
                     })}
                     <br />
-                    <Button variant="outlined" color='secondary' onClick={this.handleClick}>ORDER</Button>
+                    <Button variant="outlined" color='secondary' disabled={!this.state.loadOrderBtn} onClick={this.handleClick}>ORDER</Button>
                 </form>
         );
-        if(this.state.loadSpinner){
+        if(this.props.loading){
             form= <Spinner />;
         }
         return (
@@ -136,5 +192,21 @@ class ContactData extends Component{
     }
 }
 
-export default ContactData;
+const mapStateToProps = state => {
+    return {
+        ing: state.pizza.ingredients,
+        cost: state.pizza.totalPrice,
+        loading: state.order.loading,
+        token: state.auth.token,
+        userId: state.auth.userId
+    }
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        handleOrder: (details,token) => dispatch(orderTrigger(details,token))
+    }
+};
+
+export default connect(mapStateToProps,mapDispatchToProps)(ContactData);
 
