@@ -11,6 +11,7 @@ export {
 } from './order';
 export {
     auth,
+    authorise,
     logOut,
     changeAuthPath,
     checkAuthState

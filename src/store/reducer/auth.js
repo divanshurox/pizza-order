@@ -9,8 +9,8 @@ const initState = {
     authPath: '/'
 }
 
-const reducer = (state=initState,action) => {
-    switch(action.type){
+const reducer = (state = initState, action) => {
+    switch (action.type) {
         case actions.AUTH_START:
             return {
                 ...state,
@@ -29,8 +29,16 @@ const reducer = (state=initState,action) => {
                 loading: false,
                 isAuthenticated: true
             }
+        case actions.AUTH_GOOGLE_SUCCESS:
+            return {
+                ...state,
+                token: action.idToken,
+                userId: action.userId,
+                loading: false,
+                isAuthenticated: true
+            }
         case actions.LOGOUT:
-            return{
+            return {
                 ...state,
                 isAuthenticated: false,
                 token: null,
@@ -41,7 +49,7 @@ const reducer = (state=initState,action) => {
                 ...state,
                 authPath: action.path
             }
-        default: 
+        default:
             return state;
     }
 };

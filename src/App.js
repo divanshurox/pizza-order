@@ -1,47 +1,50 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import './App.css';
 import Layout from '../src/components/Layout/Layout';
 import PizzaBuilder from '../src/containers/PizzaBuilder/PizzaBuilder';
-import {Route, Switch, withRouter,Redirect} from 'react-router-dom';
+import { Route, Switch, withRouter, Redirect } from 'react-router-dom';
 import Checkout from './containers/Checkout/Checkout';
+import GoogleLogin from './containers/Auth/LoginGoogle';
 import Orders from './containers/Orders/Orders';
 import About from './components/About/About';
 import Auth from './containers/Auth/Auth';
 import SignIn from './containers/SignIn/SignIn';
 import Logout from './containers/Auth/Logout/Logout';
 import { connect } from 'react-redux';
-import {checkAuthState} from './store/actions/index';
+import { checkAuthState } from './store/actions/index';
 
 class App extends Component {
-  componentDidMount(){
+  componentDidMount() {
     this.props.check();
   }
-  render(){
+  render() {
     let routes = (
       <Switch>
         <Route exact path="/" component={PizzaBuilder} />
         <Route path="/auth" component={Auth} />
+        <Route exact path="/oauth" component={GoogleLogin} />
         <Route path="/signIn" component={SignIn} />
         <Route path="/about" component={About} />
         <Redirect to="/" />
       </Switch>
     );
-    if(this.props.isAuth){
+    // Add more functinonality like email confirmation and changes in sign up like asking for password two times and confirming
+    if (this.props.isAuth) {
       routes = (
         <Switch>
-            <Route exact path="/" component={PizzaBuilder} />
-            <Route path="/confirmOrder" component={Checkout} />
-            <Route path="/orders" component={Orders} />
-            <Route path="/logout" component={Logout} />
-            <Route path="/about" component={About} />
-            <Redirect to="/" />
+          <Route exact path="/" component={PizzaBuilder} />
+          <Route path="/confirmOrder" component={Checkout} />
+          <Route path="/orders" component={Orders} />
+          <Route path="/logout" component={Logout} />
+          <Route path="/about" component={About} />
+          <Redirect to="/" />
         </Switch>
       );
     }
     return (
       <div className="App">
         <Layout>
-            {routes}
+          {routes}
         </Layout>
       </div>
     );
@@ -60,4 +63,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps,mapDispatchToProps)(withRouter(App));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(App));
